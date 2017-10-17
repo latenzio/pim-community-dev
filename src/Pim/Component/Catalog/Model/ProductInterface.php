@@ -110,7 +110,7 @@ interface ProductInterface extends
      *
      * @return ProductInterface
      */
-    public function setAssociations(array $associations = []);
+    public function setAssociations($associations);
 
     /**
      * Add a type of an association

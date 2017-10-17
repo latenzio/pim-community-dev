@@ -125,13 +125,13 @@ class FixturesContext extends BaseFixturesContext
 
         $convertedData = $converter->convert($data);
         $product = $processor->process($convertedData);
-        $this->getProductSaver()->save($product);
+        $this->getContainer()->get('pim_catalog.saver.product')->save($product);
 
         // reset the unique value set to allow to update product values
         $this->getContainer()->get('pim_catalog.validator.unique_value_set')->reset();
         $this->getContainer()->get('pim_catalog.validator.unique_axes_combination_set')->reset();
 
-        $this->refresh($product);
+//        $this->refresh($product);
         $this->buildProductHistory($product);
 
         $this->getElasticsearchProductClient()->refreshIndex();

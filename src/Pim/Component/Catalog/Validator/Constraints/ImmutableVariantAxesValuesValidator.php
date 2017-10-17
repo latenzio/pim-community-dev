@@ -68,6 +68,10 @@ class ImmutableVariantAxesValuesValidator extends ConstraintValidator
         }, $this->attributesProvider->getAxes($entity));
 
         $originalData = $this->entityManager->getUnitOfWork()->getOriginalEntityData($entity);
+        if (!isset($originalData['rawValues'])) {
+            return;
+        }
+
         $originalValues = $this->valueCollectionFactory->createFromStorageFormat($originalData['rawValues']);
 
         foreach ($axisCodes as $code) {

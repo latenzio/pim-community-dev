@@ -1,8 +1,8 @@
 Pim\Component\Catalog\Model\Product:
     constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
-            fields: [identifier]
-            message: The same identifier is already set on another product
+#        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+#            fields: [identifier]
+#            message: The same identifier is already set on another product
     properties:
         identifier:
             - NotBlank: ~
