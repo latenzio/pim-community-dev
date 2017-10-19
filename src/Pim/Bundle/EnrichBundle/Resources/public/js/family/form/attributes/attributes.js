@@ -41,7 +41,7 @@ define([
             attributeNotRequiredIconClass: 'AknAcl-icon icon-circle non-required',
             requiredLabel: __('pim_enrich.form.family.tab.attributes.required_label'),
             notRequiredLabel: __('pim_enrich.form.family.tab.attributes.not_required_label'),
-            identifierAttribute: 'pim_catalog_identifier',
+            identifierAttributeType: 'pim_catalog_identifier',
             template: _.template(template),
             errors: [],
             catalogLocale: UserContext.get('catalogLocale'),
@@ -136,7 +136,7 @@ define([
                         attributeGroups: attributeGroups,
                         colspan: (this.channels.length + 2),
                         i18n: i18n,
-                        identifierAttribute: this.identifierAttribute,
+                        identifierAttributeType: this.identifierAttributeType,
                         catalogLocale: this.catalogLocale,
                         readOnly: this.readOnly
                     }));
@@ -202,7 +202,7 @@ define([
              * @returns {boolean}
              */
             isAttributeEditable: function (type) {
-                return this.identifierAttribute !== type;
+                return this.identifierAttributeType !== type;
             },
 
             /**
