@@ -83,7 +83,7 @@ class FamilyNormalizer implements NormalizerInterface
             $normalizedFamily['attribute_requirements'],
             $fullAttributes
         );
-        $normalizedFamily['attributesUsedAsAxis'] = $this->getAllAttributeCodesUsedAsAxis($family);
+        $normalizedFamily['attributes_used_as_axis'] = $this->getAllAttributeCodesUsedAsAxis($family);
 
         $firstVersion = $this->versionManager->getOldestLogEntry($family);
         $lastVersion = $this->versionManager->getNewestLogEntry($family);

@@ -247,14 +247,15 @@ define([
              */
             onRemoveAttribute: function (event) {
                 event.preventDefault();
-                var attributeAsLabel = this.getFormData().attribute_as_label;
-                var attributeAsImage = this.getFormData().attribute_as_image;
+                const attributeAsLabel = this.getFormData().attribute_as_label;
+                const attributeAsImage = this.getFormData().attribute_as_image;
+                const attributesUsedAsAxis = this.getFormData().attributes_used_as_axis;
 
                 if (!SecurityContext.isGranted('pim_enrich_family_edit_attributes')) {
                     return false;
                 }
 
-                var attributeToRemove = event.currentTarget.dataset.attribute;
+                const attributeToRemove = event.currentTarget.dataset.attribute;
 
                 if (attributeAsLabel === attributeToRemove) {
                     Messenger.notify(
@@ -263,10 +264,18 @@ define([
                     );
 
                     return false;
+
                 } else if (attributeAsImage === attributeToRemove) {
                     Messenger.notify(
                         'error',
                         __('pim_enrich.entity.family.info.cant_remove_attribute_as_image')
+                    );
+
+                    return false;
+                } else if (_.contains(attributesUsedAsAxis, attributeToRemove)) {
+                    Messenger.notify(
+                        'error',
+                        __('pim_enrich.entity.family.info.cant_remove_attribute_as_used_as_axis')
                     );
 
                     return false;
@@ -407,7 +416,8 @@ define([
                 );
                 const notRemovableAttributeCodes = _.map(notRemovableAttributes, attribute => attribute.code);
 
-                return notRemovableAttributeCodes;
+                // return notRemovableAttributeCodes;
+                return [];
             }
         });
     }
