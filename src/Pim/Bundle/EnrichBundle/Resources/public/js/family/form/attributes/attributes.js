@@ -69,11 +69,11 @@ define([
                     'pim_enrich:form:entity:post_fetch',
                     this.render
                 );
-                this.listenTo(this.getRoot(), 'pim_enrich:form:update_read_only', function (readOnly) {
+                this.listenTo(this.getRoot(), 'pim_enrich:form:update_read_only', (readOnly) => {
                     this.readOnly = readOnly;
 
                     this.render();
-                }.bind(this));
+                });
 
                 this.listenTo(
                     this.getRoot(),
@@ -110,13 +110,13 @@ define([
                             'apply_filters': false
                         }
                     )
-                ).then(function (channels, attributeGroups) {
+                ).then((channels, attributeGroups) => {
                     this.channels = channels;
                     var groupedAttributes = _.groupBy(data.attributes, 'group');
 
-                    _.sortBy(groupedAttributes, function (attributes, group) {
+                    _.sortBy(groupedAttributes, (attributes, group) => {
                         return _.findWhere(attributeGroups, {code: group}).sort_order;
-                    }.bind(this));
+                    });
 
                     _.each(groupedAttributes, function (attributes, group) {
                         attributes = _.sortBy(attributes, function (attribute) {
@@ -147,7 +147,7 @@ define([
 
                     this.delegateEvents();
                     this.renderExtensions();
-                }.bind(this));
+                });
             },
 
             /**
@@ -293,13 +293,13 @@ define([
                 $.when(
                     FetcherRegistry.getFetcher('attribute')
                         .search(options)
-                ).then(function (attributes) {
-                    _.each(attributes, function (attribute) {
+                ).then((attributes) => {
+                    _.each(attributes, (attribute) => {
                         this.addAttribute(attribute);
-                    }.bind(this));
+                    });
 
                     this.render();
-                }.bind(this)).always(function () {
+                }).always(function () {
                     loadingMask.hide().$el.remove();
                 });
             },
@@ -322,7 +322,7 @@ define([
                             }
                         }),
                     FetcherRegistry.getFetcher('attribute').getIdentifierAttribute()
-                ).then(function (attributeGroups, identifier) {
+                ).then((attributeGroups, identifier) => {
                     var existingAttributes = _.pluck(this.getFormData().attributes, 'code');
                     var groupsAttributes = [].concat.apply(
                         [],
@@ -340,13 +340,13 @@ define([
                                 limit: attributesToAdd.length
                             }
                         });
-                }.bind(this)).then(function (attributes) {
-                    _.each(attributes, function (attribute) {
+                }).then((attributes) => {
+                    _.each(attributes, (attribute) => {
                         this.addAttribute(attribute);
-                    }.bind(this));
+                    });
 
                     this.render();
-                }.bind(this)).always(function () {
+                }).always(function () {
                     loadingMask.hide().$el.remove();
                 });
             },
