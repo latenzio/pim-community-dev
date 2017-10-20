@@ -5,6 +5,7 @@ namespace Pim\Bundle\EnrichBundle\Normalizer;
 use Pim\Bundle\CatalogBundle\Filter\CollectionFilterInterface;
 use Pim\Bundle\VersioningBundle\Manager\VersionManager;
 use Pim\Component\Catalog\Model\FamilyInterface;
+use Pim\Component\Catalog\Model\FamilyVariantInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -82,6 +83,7 @@ class FamilyNormalizer implements NormalizerInterface
             $normalizedFamily['attribute_requirements'],
             $fullAttributes
         );
+        $normalizedFamily['attributesUsedAsAxis'] = $this->getAllAttributeCodesUsedAsAxis($family);
 
         $firstVersion = $this->versionManager->getOldestLogEntry($family);
         $lastVersion = $this->versionManager->getNewestLogEntry($family);
@@ -170,5 +172,39 @@ class FamilyNormalizer implements NormalizerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Returns a list of attributes
+     *
+     * @param FamilyInterface $family
+     *
+     * @return string[]
+     */
+    private function getAllAttributeCodesUsedAsAxis(FamilyInterface $family): array
+    {
+        $attributesUsedAsAxis = [];
+        foreach ($family->getFamilyVariants() as $familyVariant) {
+            $attributesAxisCodes = $this->getAttributeAxisCodesForFamilyVariant($familyVariant);
+            $attributesUsedAsAxis = array_replace($attributesUsedAsAxis, $attributesAxisCodes);
+        }
+
+        return $attributesUsedAsAxis;
+    }
+
+    /**
+     * Returns the attributes codes of the given family variant axes.
+     *
+     * @param FamilyVariantInterface $familyVariant
+     *
+     * @return string[]
+     */
+    private function getAttributeAxisCodesForFamilyVariant(FamilyVariantInterface $familyVariant): array
+    {
+        $attributesAxisCodes = array_map(function ($attribute) {
+            return $attribute->getCode();
+        }, $familyVariant->getAxes()->toArray());
+
+        return $attributesAxisCodes;
     }
 }
