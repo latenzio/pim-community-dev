@@ -236,10 +236,12 @@ define([
             },
 
             /**
-             * Removes attribute from family
+             * Removes attribute from family upon user confirmation
              *
              * Checks if user has rights to remove attributes
              * Checks if attribute is not used as label
+             * Checks if attribute is not used as image
+             * Checks if attribute is not used as axis in a family variant
              *
              * @param {Object} event
              */
@@ -279,7 +281,15 @@ define([
                     return false;
                 }
 
-                return this.removeAttribute(attributeToRemove);
+                Dialog.confirmDelete(
+                    __(this.config.confirmation.message, {attribute: attributeToRemove}),
+                    __(this.config.confirmation.title),
+                    function () {
+                        this.removeAttribute(attributeToRemove);
+                    }.bind(this),
+                    __(this.config.confirmation.subTitle),
+                    __(this.config.confirmation.buttonText)
+                );
             },
 
             /**
