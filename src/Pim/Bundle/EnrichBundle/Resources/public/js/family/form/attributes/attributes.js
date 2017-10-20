@@ -126,8 +126,6 @@ define([
                         groupedAttributes[group] = attributes;
                     });
 
-                    const notRemovableAttributeCodes = this.getNotRemovableAttributeCodes(data);
-
                     this.$el.html(this.template({
                         label: __(this.config.label),
                         requiredLabel: this.requiredLabel,
@@ -138,8 +136,8 @@ define([
                         attributeGroups: attributeGroups,
                         colspan: (this.channels.length + 2),
                         i18n: i18n,
+                        identifierAttributeType: this.identifierAttributeType,
                         catalogLocale: this.catalogLocale,
-                        notRemovableAttributeCodes: notRemovableAttributeCodes,
                         readOnly: this.readOnly
                     }));
 
@@ -398,26 +396,6 @@ define([
 
                 data.attributes.push(attribute);
                 this.setData(data);
-            },
-
-            /**
-             * Filters the attributes which are not eligible to be removed from the family.
-             *
-             * @param data
-             * @returns {Array}
-             */
-            getNotRemovableAttributeCodes: function (data) {
-                const notRemovableAttributes = _.filter(
-                    data.attributes,
-                    attribute => attribute.type === this.identifierAttributeType ||
-                        attribute.code === data.attribute_as_label ||
-                        attribute.code === data.attribute_as_image ||
-                        _.contains(attribute.code, data.attributesUsedAsAxis)
-                );
-                const notRemovableAttributeCodes = _.map(notRemovableAttributes, attribute => attribute.code);
-
-                // return notRemovableAttributeCodes;
-                return [];
             }
         });
     }
