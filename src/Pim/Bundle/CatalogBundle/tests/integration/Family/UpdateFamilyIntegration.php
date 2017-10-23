@@ -18,14 +18,8 @@ class UpdateFamilyIntegration extends TestCase
 {
     public function testRemovingSimpleAttributeFromFamilyIsAllowed()
     {
-        $hasThrown = false;
-        try {
-            $this->removeAttributeFromFamily('shoes', 'material');
-        } catch (\Exception $e) {
-            $hasThrown = true;
-        }
-
-        $this->assertFalse($hasThrown);
+        $errors = $this->removeAttributeFromFamily('shoes', 'material');
+        $this->assertCount(0, $errors);
     }
 
     /**
@@ -34,7 +28,9 @@ class UpdateFamilyIntegration extends TestCase
      */
     public function testRemovingAxisAttributeOfAFamilyVariantFromFamilyIsNotAllowed()
     {
-        $this->removeAttributeFromFamily('shoes', 'eu_shoes_size');
+        $errors = $this->removeAttributeFromFamily('shoes', 'eu_shoes_size');
+        $this->assertCount(1, $errors);
+        $error = current($errors);
     }
 
     /**
@@ -49,12 +45,17 @@ class UpdateFamilyIntegration extends TestCase
      * @param string $familyCode
      * @param string $attributeCode
      */
-    private function removeAttributeFromFamily(string $familyCode, string $attributeCode)
+    private function removeAttributeFromFamily(string $familyCode, string $attributeCode): array
     {
         $family = $this->get('pim_catalog.repository.family')->findOneByIdentifier($familyCode);
         $attribute = $this->get('pim_catalog.repository.attribute')->findOneByIdentifier($attributeCode);
         $family->removeAttribute($attribute);
-        $this->get('validator')->validate($family);
-        $this->get('pim_catalog.saver.family')->save($family);
+        $errors = $this->get('validator')->validate($family);
+
+        if (count($errors) > 0) {
+            $this->get('pim_catalog.saver.family')->save($family);
+        }
+
+        return $errors;
     }
 }
