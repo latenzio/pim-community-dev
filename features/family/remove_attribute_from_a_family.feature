@@ -5,30 +5,30 @@ Feature: Remove attribute from a family
   I need to be able to remove an attribute from a family
 
   Background:
-    Given the "default" catalog configuration
-    And the following attributes:
-      | label-en_US      | group | type             | code            |
-      | Long Description | other | pim_catalog_text | longDescription |
-      | Manufacturer     | other | pim_catalog_text | manufacturer    |
-    And the following family:
-      | code | attributes                   |
-      | Bags | longDescription,manufacturer |
-    And the following product:
-      | sku            | family | longDescription | manufacturer |
-      | bag-dolce-vita | Bags   | my description  | dolce        |
-      | bag-noname     | Bags   | some random bag |              |
+    Given the "catalog_modeling" catalog configuration
     And I am logged in as "Peter"
 
   Scenario: Successfully remove an attribute from a family and display it as removable from product
-    Given I am on the "Bags" family page
+    Given I am on the "accessories" family page
     And I visit the "Attributes" tab
-    When I remove the "manufacturer" attribute
+    When I remove the "material" attribute
+    And I press the "Remove" button in the popin
     And I save the family
     And I should not see the text "There are unsaved changes."
     Then I should see the flash message "Attribute successfully removed from the family"
-    And I should see attribute "Long Description" in group "Other"
-    When I am on the "bag-dolce-vita" product page
-    Then I should see a remove link next to the "Manufacturer" field
+    When I am on the "1111111292" product page
+    Then I should see a remove link next to the "Material" field
+
+  Scenario: Successfully remove an attribute from a family and display it as removable from product model
+    Given I am on the "accessories" family page
+    And I visit the "Attributes" tab
+    When I remove the "material" attribute
+    And I press the "Remove" button in the popin
+    And I save the family
+    And I should not see the text "There are unsaved changes."
+    Then I should see the flash message "Attribute successfully removed from the family"
+    When I am on the "model-braided-hat" product model page
+    Then I should see a remove link next to the "Material" field
 
   @skip
   Scenario: Successfully update product completeness when removing a required attribute from a family
@@ -50,6 +50,7 @@ Feature: Remove attribute from a family
     When I am on the "Bags" family page
     And I visit the "Attributes" tab
     And I remove the "manufacturer" attribute
+    And I press the "Remove" button in the popin
     And I save the family
     Then I should not see the text "There are unsaved changes."
     When I am on the "bag-noname" product page

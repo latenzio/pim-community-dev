@@ -83,7 +83,6 @@ class FamilyNormalizer implements NormalizerInterface
             $normalizedFamily['attribute_requirements'],
             $fullAttributes
         );
-        $normalizedFamily['attributes_used_as_axis'] = $this->getAllAttributeCodesUsedAsAxis($family);
 
         $firstVersion = $this->versionManager->getOldestLogEntry($family);
         $lastVersion = $this->versionManager->getNewestLogEntry($family);
@@ -94,10 +93,11 @@ class FamilyNormalizer implements NormalizerInterface
             $this->versionNormalizer->normalize($lastVersion, 'internal_api', $context);
 
         $normalizedFamily['meta'] = [
-            'id'      => $family->getId(),
-            'form'    => 'pim-family-edit-form',
-            'created' => $created,
-            'updated' => $updated,
+            'id'                      => $family->getId(),
+            'form'                    => 'pim-family-edit-form',
+            'created'                 => $created,
+            'updated'                 => $updated,
+            'attributes_used_as_axis' => $this->getAllAttributeCodesUsedAsAxis($family),
         ];
 
         return $normalizedFamily;
@@ -183,13 +183,13 @@ class FamilyNormalizer implements NormalizerInterface
      */
     private function getAllAttributeCodesUsedAsAxis(FamilyInterface $family): array
     {
-        $attributesUsedAsAxis = [];
+        $attributeCodesUsedAsAxis = [];
         foreach ($family->getFamilyVariants() as $familyVariant) {
             $attributesAxisCodes = $this->getAttributeAxisCodesForFamilyVariant($familyVariant);
-            $attributesUsedAsAxis = array_replace($attributesUsedAsAxis, $attributesAxisCodes);
+            $attributeCodesUsedAsAxis = array_merge($attributeCodesUsedAsAxis, $attributesAxisCodes);
         }
 
-        return $attributesUsedAsAxis;
+        return array_values(array_unique($attributeCodesUsedAsAxis));
     }
 
     /**

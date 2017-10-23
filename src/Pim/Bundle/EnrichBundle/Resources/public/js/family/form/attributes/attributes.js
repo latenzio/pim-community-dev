@@ -249,7 +249,7 @@ define([
                 event.preventDefault();
                 const attributeAsLabel = this.getFormData().attribute_as_label;
                 const attributeAsImage = this.getFormData().attribute_as_image;
-                const attributesUsedAsAxis = this.getFormData().attributes_used_as_axis;
+                const attributesUsedAsAxis = this.getFormData().meta.attributes_used_as_axis;
 
                 if (!SecurityContext.isGranted('pim_enrich_family_edit_attributes')) {
                     return false;
