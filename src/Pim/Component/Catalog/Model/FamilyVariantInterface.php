@@ -85,13 +85,4 @@ interface FamilyVariantInterface extends TranslatableInterface
      * @return array
      */
     public static function getAvailableAxesAttributeTypes(): array;
-
-    /**
-     * Checks whether the given attribute is used as axis in any of its related variant attribute sets.
-     *
-     * @param AttributeInterface $attribute
-     *
-     * @return bool
-     */
-    public function isAxis(AttributeInterface $attribute): bool;
 }

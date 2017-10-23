@@ -246,14 +246,6 @@ class FamilyVariant implements FamilyVariantInterface
     /**
      * {@inheritdoc}
      */
-    public function isAxis(AttributeInterface $attribute): bool
-    {
-        return in_array($attribute, $this->getAxes()->toArray(), true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function getAvailableAxesAttributeTypes(): array
     {
         return [

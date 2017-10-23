@@ -175,7 +175,7 @@ class FamilyNormalizer implements NormalizerInterface
     }
 
     /**
-     * Returns a list of attributes
+     * Returns a list of attributes used as axis in the family variants.
      *
      * @param FamilyInterface $family
      *

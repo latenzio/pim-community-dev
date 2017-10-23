@@ -175,15 +175,6 @@ class Family implements FamilyInterface
             throw new \InvalidArgumentException('Identifier cannot be removed from a family.');
         }
 
-        if ($this->isAttributeUsedAxisInFamilyVariants($attribute)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Attribute "%s" is used as axis in at least one family variant. It cannot be removed from family.',
-                    $attribute->getCode()
-                )
-            );
-        }
-
         $this->attributes->removeElement($attribute);
 
         return $this;
@@ -472,23 +463,5 @@ class Family implements FamilyInterface
     public function setFamilyVariants(Collection $familyVariants): void
     {
         $this->familyVariants = $familyVariants;
-    }
-
-    /**
-     * Checks whether the given attribute is used as an axis in at least one family variant.
-     *
-     * @param AttributeInterface $attribute
-     *
-     * @return bool
-     */
-    private function isAttributeUsedAxisInFamilyVariants(AttributeInterface $attribute): bool
-    {
-        foreach ($this->getFamilyVariants() as $familyVariant) {
-            if($familyVariant->isAxis($attribute)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
