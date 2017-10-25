@@ -281,15 +281,7 @@ define([
                     return false;
                 }
 
-                Dialog.confirmDelete(
-                    __(this.config.confirmation.message, {attribute: attributeToRemove}),
-                    __(this.config.confirmation.title),
-                    function () {
-                        this.removeAttribute(attributeToRemove);
-                    }.bind(this),
-                    __(this.config.confirmation.subTitle),
-                    __(this.config.confirmation.buttonText)
-                );
+                this.removeAttribute(attributeToRemove);
             },
 
             /**

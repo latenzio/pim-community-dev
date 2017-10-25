@@ -34,6 +34,7 @@ class UpdateFamilyIntegration extends TestCase
         $this->assertEquals(1, $errors->count());
         $error = $errors->getIterator()->current();
         $this->assertEquals(FamilyAttributeUsedAsAxis::class, get_class($error->getConstraint()));
+        // TODO: check error message
     }
 
     /**

@@ -425,7 +425,6 @@ pim_enrich:
         remove:          Remove
         delete:
             attribute: Are you sure you want to delete this attribute from the product?
-            attribute_from_family: Are you sure you want to remove this attribute from the family? If some products have values for this attribute, this attribute will become "optional". Else, it will be removed from the products.
             attribute_group: Are you sure you want to remove the attribute {{ attribute }} from this attribute group?
     info:
         not_applicable: N/A

@@ -12,23 +12,40 @@ Feature: Remove attribute from a family
     Given I am on the "accessories" family page
     And I visit the "Attributes" tab
     When I remove the "material" attribute
-    And I press the "Remove" button in the popin
     And I save the family
     And I should not see the text "There are unsaved changes."
     Then I should see the flash message "Attribute successfully removed from the family"
     When I am on the "1111111292" product page
     Then I should see a remove link next to the "Material" field
 
-  Scenario: Successfully remove an attribute from a family and display it as removable from product model
+  Scenario: Successfully remove an attribute from a family and it does not appear in the variant product edit page
     Given I am on the "accessories" family page
     And I visit the "Attributes" tab
     When I remove the "material" attribute
-    And I press the "Remove" button in the popin
     And I save the family
     And I should not see the text "There are unsaved changes."
     Then I should see the flash message "Attribute successfully removed from the family"
     When I am on the "model-braided-hat" product model page
-    Then I should see a remove link next to the "Material" field
+    Then I should not see the text "Material"
+
+  Scenario: Impossible to remove some attributes from a family (used as label, used as image, used as axis)
+    Given I am on the "shoes" family page
+    And I visit the "Attributes" tab
+    And I scroll down
+    When I remove the "variation_name" attribute
+    Then I should see the flash message "Cannot remove attribute used as label"
+    When I remove the "variation_image" attribute
+    Then I should see the flash message "Cannot remove used as the main picture"
+    When I remove the "size" attribute
+    Then I should see the flash message "Cannot remove this attribute used as a variant axis in a family variant"
+    And I should see the text "size"
+
+  Scenario: Sucessfully remove an attribute from a family removes it from the family variants.
+    Given I am on the "shoes" family page
+    And I visit the "Attributes" tab
+    When I remove the "size" attribute
+    Then I should see the flash message "Cannot remove this attribute used as a variant axis in a family variant"
+    And I should see the text "size"
 
   @skip
   Scenario: Successfully update product completeness when removing a required attribute from a family
