@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class FamilyAttributesUsedAsAxis extends Constraint
+class FamilyAttributeUsedAsAxis extends Constraint
 {
     /** @var string */
     public $messageAttribute = 'Attribute "%attribute%" is an axis in "%family_variant%" family variant. It must belong to the family.';
@@ -22,7 +22,7 @@ class FamilyAttributesUsedAsAxis extends Constraint
      */
     public function validatedBy()
     {
-        return 'pim_family_attribute_used_as_axis_validator';
+        return 'pim_family_attribute_used_as_axis';
     }
 
     /**

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class FamilyAttributesUsedAsAxisValidator extends ConstraintValidator
+class FamilyAttributeUsedAsAxisValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}
@@ -27,17 +27,19 @@ class FamilyAttributesUsedAsAxisValidator extends ConstraintValidator
             return;
         }
 
-        if (!$constraint instanceof FamilyAttributesUsedAsAxis) {
+        if (!$constraint instanceof FamilyAttributeUsedAsAxis) {
             return;
         }
 
         foreach ($family->getFamilyVariants() as $familyVariant) {
             $missingAttributesUsedAsAxis = $this->getMissingAttributeCodesUsedAsAxis($family, $familyVariant);
-            $this->buildViolationsForMissingAttributesUsedAsAxis(
-                $constraint,
-                $familyVariant,
-                $missingAttributesUsedAsAxis
-            );
+            if (!empty($missingAttributesUsedAsAxis)) {
+                $this->buildViolationsForMissingAttributesUsedAsAxis(
+                    $constraint,
+                    $familyVariant,
+                    $missingAttributesUsedAsAxis
+                );
+            }
         }
     }
 
@@ -55,7 +57,7 @@ class FamilyAttributesUsedAsAxisValidator extends ConstraintValidator
             function (AttributeInterface $attribute) {
                 return $attribute->getCode();
             }
-        );
+        )->toArray();
 
         return array_diff($attributeCodesUsedAsAxis, $family->getAttributeCodes());
     }
@@ -70,15 +72,13 @@ class FamilyAttributesUsedAsAxisValidator extends ConstraintValidator
         FamilyVariantInterface $familyVariant,
         array $missingAttributeCodesUsedAsAxis
     ): void {
-        if (0 < count($missingAttributeCodesUsedAsAxis)) {
-            foreach ($missingAttributeCodesUsedAsAxis as $missingAttributeUsedAsAxis) {
-                $this->context
-                    ->buildViolation($constraint->messageAttribute, [
-                        '%attribute%' => $missingAttributeUsedAsAxis,
-                        '%family_variant%' => $familyVariant->getCode()
-                    ])
-                    ->addViolation();
-            }
+        foreach ($missingAttributeCodesUsedAsAxis as $missingAttributeUsedAsAxis) {
+            $this->context
+                ->buildViolation($constraint->messageAttribute, [
+                    '%attribute%'      => $missingAttributeUsedAsAxis,
+                    '%family_variant%' => $familyVariant->getCode(),
+                ])
+                ->addViolation();
         }
     }
 }

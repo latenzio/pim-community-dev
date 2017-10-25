@@ -6,14 +6,14 @@ use Doctrine\Common\Collections\Collection;
 use PhpSpec\ObjectBehavior;
 use Pim\Component\Catalog\Model\FamilyInterface;
 use Pim\Component\Catalog\Model\FamilyVariantInterface;
-use Pim\Component\Catalog\Validator\Constraints\FamilyAttributesUsedAsAxis;
-use Pim\Component\Catalog\Validator\Constraints\FamilyAttributesUsedAsAxisValidator;
+use Pim\Component\Catalog\Validator\Constraints\FamilyAttributeUsedAsAxis;
+use Pim\Component\Catalog\Validator\Constraints\FamilyAttributeUsedAsAxisValidator;
 use Prophecy\Argument;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
-class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
+class FamilyAttributeUsedAsAxisValidatorSpec extends ObjectBehavior
 {
     function let(ExecutionContextInterface $context)
     {
@@ -22,12 +22,12 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(FamilyAttributesUsedAsAxisValidator::class);
+        $this->shouldHaveType(FamilyAttributeUsedAsAxisValidator::class);
     }
 
     function it_only_supports_constraint_family_attributes_used_as_axis(
         $context,
-        FamilyAttributesUsedAsAxis $familyAttributesUsedAsAxisConstraint,
+        FamilyAttributeUsedAsAxis $familyAttributesUsedAsAxisConstraint,
         FamilyInterface $family,
         Collection $familyVariants,
         \ArrayIterator $familyVariantIterator
@@ -53,7 +53,7 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
     function it_builds_violation_for_an_attribute_used_as_axis_in_one_family_variant(
         $context,
         ConstraintViolationBuilderInterface $violationBuilder,
-        FamilyAttributesUsedAsAxis $familyAttributesUsedAsAxisConstraint,
+        FamilyAttributeUsedAsAxis $familyAttributesUsedAsAxisConstraint,
         FamilyInterface $family,
         FamilyVariantInterface $familyVariant,
         Collection $familyVariants,
@@ -71,8 +71,8 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
         $familyVariant->getCode()->willReturn('my_family_variant');
         $familyVariant->getAxes()->willReturn($axisAttributes);
-        $axisAttributes->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code']);
+        $axisAttributes->map(Argument::cetera())->willReturn($axisAttributes);
+        $axisAttributes->toArray()->willReturn(['attribute_used_as_axis_code']);
 
         $context->buildViolation(
             $familyAttributesUsedAsAxisConstraint->messageAttribute,
@@ -89,7 +89,7 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
     function it_builds_violations_for_an_attribute_used_as_axis_in_multiple_family_variants(
         $context,
         ConstraintViolationBuilderInterface $violationBuilder,
-        FamilyAttributesUsedAsAxis $familyAttributesUsedAsAxisConstraint,
+        FamilyAttributeUsedAsAxis $familyAttributesUsedAsAxisConstraint,
         FamilyInterface $family,
         FamilyVariantInterface $familyVariant1,
         FamilyVariantInterface $familyVariant2,
@@ -109,13 +109,13 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
         $familyVariant1->getCode()->willReturn('my_family_variant_1');
         $familyVariant1->getAxes()->willReturn($axisAttributes1);
-        $axisAttributes1->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code_1', 'axis_attribute']);
+        $axisAttributes1->map(Argument::cetera())->willReturn($axisAttributes1);
+        $axisAttributes1->toArray()->willReturn(['attribute_used_as_axis_code_1', 'axis_attribute']);
 
         $familyVariant2->getCode()->willReturn('my_family_variant_2');
         $familyVariant2->getAxes()->willReturn($axisAttributes2);
-        $axisAttributes2->map(Argument::cetera())
-            ->willReturn(['axis_attribute', 'attribute_used_as_axis_code_2']);
+        $axisAttributes2->map(Argument::cetera())->willReturn($axisAttributes2);
+        $axisAttributes2->toArray()->willReturn(['axis_attribute', 'attribute_used_as_axis_code_2']);
 
         $context->buildViolation(
             $familyAttributesUsedAsAxisConstraint->messageAttribute,
@@ -139,7 +139,7 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
     function it_builds_violations_for_multiple_attributes_used_as_axis_one_family_variant(
         $context,
         ConstraintViolationBuilderInterface $violationBuilder,
-        FamilyAttributesUsedAsAxis $familyAttributesUsedAsAxisConstraint,
+        FamilyAttributeUsedAsAxis $familyAttributesUsedAsAxisConstraint,
         FamilyInterface $family,
         FamilyVariantInterface $familyVariant,
         Collection $familyVariants,
@@ -157,8 +157,8 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
         $familyVariant->getCode()->willReturn('my_family_variant');
         $familyVariant->getAxes()->willReturn($axisAttributes);
-        $axisAttributes->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
+        $axisAttributes->map(Argument::cetera())->willReturn($axisAttributes);
+        $axisAttributes->toArray()->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
 
         $context->buildViolation(
             $familyAttributesUsedAsAxisConstraint->messageAttribute,
@@ -184,7 +184,7 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
     function it_builds_violations_for_multiple_attributes_used_as_axis_in_multiple_family_variants(
         $context,
         ConstraintViolationBuilderInterface $violationBuilder,
-        FamilyAttributesUsedAsAxis $familyAttributesUsedAsAxisConstraint,
+        FamilyAttributeUsedAsAxis $familyAttributesUsedAsAxisConstraint,
         FamilyInterface $family,
         FamilyVariantInterface $familyVariant1,
         FamilyVariantInterface $familyVariant2,
@@ -204,13 +204,13 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
         $familyVariant1->getCode()->willReturn('my_family_variant_1');
         $familyVariant1->getAxes()->willReturn($axisAttributes1);
-        $axisAttributes1->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
+        $axisAttributes1->map(Argument::cetera())->willReturn($axisAttributes1);
+        $axisAttributes1->toArray()->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
 
         $familyVariant2->getCode()->willReturn('my_family_variant_2');
         $familyVariant2->getAxes()->willReturn($axisAttributes2);
-        $axisAttributes2->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
+        $axisAttributes2->map(Argument::cetera())->willReturn($axisAttributes2);
+        $axisAttributes2->toArray()->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
 
         $context->buildViolation(
             $familyAttributesUsedAsAxisConstraint->messageAttribute,
@@ -249,7 +249,7 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
     function it_does_not_build_any_violation(
         $context,
-        FamilyAttributesUsedAsAxis $familyAttributesUsedAsAxisConstraint,
+        FamilyAttributeUsedAsAxis $familyAttributesUsedAsAxisConstraint,
         FamilyInterface $family,
         FamilyVariantInterface $familyVariant1,
         FamilyVariantInterface $familyVariant2,
@@ -276,13 +276,13 @@ class FamilyAttributesUsedAsAxisValidatorSpec extends ObjectBehavior
 
         $familyVariant1->getCode()->willReturn('my_family_variant_1');
         $familyVariant1->getAxes()->willReturn($axisAttributes1);
-        $axisAttributes1->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
+        $axisAttributes1->map(Argument::cetera())->willReturn($axisAttributes1);
+        $axisAttributes1->toArray()->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
 
         $familyVariant2->getCode()->willReturn('my_family_variant_2');
         $familyVariant2->getAxes()->willReturn($axisAttributes2);
-        $axisAttributes2->map(Argument::cetera())
-            ->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
+        $axisAttributes2->map(Argument::cetera())->willReturn($axisAttributes2);
+        $axisAttributes2->toArray()->willReturn(['attribute_used_as_axis_code_1', 'attribute_used_as_axis_code_2']);
 
         $context->buildViolation()->shouldNotBeCalled();
 

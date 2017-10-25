@@ -6,6 +6,8 @@ namespace tests\integration\Pim\Bundle\CatalogBundle\EventSubscriber;
 
 use Akeneo\Test\Integration\Configuration;
 use Akeneo\Test\Integration\TestCase;
+use Pim\Component\Catalog\Validator\Constraints\FamilyAttributeUsedAsAxis;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Tries to update family attributes using imports.
@@ -19,7 +21,7 @@ class UpdateFamilyIntegration extends TestCase
     public function testRemovingSimpleAttributeFromFamilyIsAllowed()
     {
         $errors = $this->removeAttributeFromFamily('shoes', 'material');
-        $this->assertCount(0, $errors);
+        $this->assertEquals(0, $errors->count());
     }
 
     /**
@@ -28,9 +30,10 @@ class UpdateFamilyIntegration extends TestCase
      */
     public function testRemovingAxisAttributeOfAFamilyVariantFromFamilyIsNotAllowed()
     {
-        $errors = $this->removeAttributeFromFamily('shoes', 'eu_shoes_size');
-        $this->assertCount(1, $errors);
-        $error = current($errors);
+        $errors = $this->removeAttributeFromFamily('shoes', 'size');
+        $this->assertEquals(1, $errors->count());
+        $error = $errors->getIterator()->current();
+        $this->assertEquals(FamilyAttributeUsedAsAxis::class, get_class($error->getConstraint()));
     }
 
     /**
@@ -45,8 +48,8 @@ class UpdateFamilyIntegration extends TestCase
      * @param string $familyCode
      * @param string $attributeCode
      */
-    private function removeAttributeFromFamily(string $familyCode, string $attributeCode): array
-    {
+    private function removeAttributeFromFamily(string $familyCode, string $attributeCode)
+    : ConstraintViolationListInterface {
         $family = $this->get('pim_catalog.repository.family')->findOneByIdentifier($familyCode);
         $attribute = $this->get('pim_catalog.repository.attribute')->findOneByIdentifier($attributeCode);
         $family->removeAttribute($attribute);
