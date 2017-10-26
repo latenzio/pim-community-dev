@@ -65,4 +65,9 @@ interface VariantAttributeSetInterface
      * @return array
      */
     public function getAxesLabels(string $locale): array;
+
+    /**
+     * @param AttributeInterface $attribute
+     */
+    public function removeAttribute(AttributeInterface $attribute): void;
 }

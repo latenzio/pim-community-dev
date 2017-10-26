@@ -129,4 +129,14 @@ class VariantAttributeSet implements VariantAttributeSetInterface
 
         return $labels;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAttribute(AttributeInterface $attribute): void
+    {
+        if ($this->attributes->contains($attribute)) {
+            $this->attributes->removeElement($attribute);
+        }
+    }
 }
