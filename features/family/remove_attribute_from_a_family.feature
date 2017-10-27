@@ -43,9 +43,13 @@ Feature: Remove attribute from a family
   Scenario: Sucessfully remove an attribute from a family removes it from the family variants.
     Given I am on the "shoes" family page
     And I visit the "Attributes" tab
-    When I remove the "size" attribute
-    Then I should see the flash message "Cannot remove this attribute used as a variant axis in a family variant"
-    And I should see the text "size"
+    And I remove the "weight" attribute
+    And I remove the "composition" attribute
+    When I save the family
+    And I visit the "Variants" tab
+    And I click on the "Shoes by size and color" row
+    Then I should not see the text "Weight"
+    Then I should not see the text "Composition"
 
   @skip
   Scenario: Successfully update product completeness when removing a required attribute from a family

@@ -22,13 +22,13 @@ class UpdateFamilyIntegration extends TestCase
 {
     public function testRemovingSimpleAttributeFromFamilyIsAllowed()
     {
-        $violations = $this->removeAttributeFromFamily('shoes', 'material');
+        $violations = $this->removeAttributeFromFamily('shoes', ['material']);
         $this->assertEquals(0, $violations->count());
     }
 
     public function testRemovingAxisAttributeOfAFamilyVariantFromFamilyIsNotAllowed()
     {
-        $violations = $this->removeAttributeFromFamily('shoes', 'size');
+        $violations = $this->removeAttributeFromFamily('shoes', ['size']);
         $this->assertEquals(1, $violations->count());
         $violation = $violations->getIterator()->current();
         $this->assertEquals(FamilyAttributeUsedAsAxis::class, get_class($violation->getConstraint()));
@@ -38,18 +38,19 @@ class UpdateFamilyIntegration extends TestCase
         );
     }
 
-    public function testRemovingAttributeOfAFamilyAlsoRemovesItFromTheFamilyVariants()
+    public function testRemovingAttributeFromAFamilyAlsoRemovesItFromTheFamilyVariants()
     {
-        $errors = $this->removeAttributeFromFamily('shoes', 'weight');
+        $errors = $this->removeAttributeFromFamily('shoes', ['weight']);
         $this->assertEquals(0, $errors->count());
         $this->assertAttributeMissingFromFamilyVariants('weight', 'shoes');
     }
 
-    public function testRemovingMultipleAttributesOfAFamilyAlsoRemovesItFromTheFamilyVariants()
+    public function testRemovingMultipleAttributesFromAFamilyAlsoRemovesItFromTheFamilyVariants()
     {
-        $errors = $this->removeAttributeFromFamily('shoes', 'weight');
+        $errors = $this->removeAttributeFromFamily('shoes', ['weight', 'composition']);
         $this->assertEquals(0, $errors->count());
         $this->assertAttributeMissingFromFamilyVariants('weight', 'shoes');
+        $this->assertAttributeMissingFromFamilyVariants('composition', 'shoes');
     }
 
     /**
@@ -62,15 +63,20 @@ class UpdateFamilyIntegration extends TestCase
 
     /**
      * @param string $familyCode
-     * @param string $attributeCode
+     * @param array  $attributeCodes
+     *
+     * @return ConstraintViolationListInterface
      */
     private function removeAttributeFromFamily(
         string $familyCode,
-        string $attributeCode
+        array $attributeCodes
     ): ConstraintViolationListInterface {
         $family = $this->get('pim_catalog.repository.family')->findOneByIdentifier($familyCode);
-        $attribute = $this->get('pim_catalog.repository.attribute')->findOneByIdentifier($attributeCode);
-        $family->removeAttribute($attribute);
+        foreach ($attributeCodes as $attributeCode) {
+            $attribute = $this->get('pim_catalog.repository.attribute')->findOneByIdentifier($attributeCode);
+            $family->removeAttribute($attribute);
+        }
+
         $violations = $this->get('validator')->validate($family);
 
         if ($violations->count() === 0) {
@@ -90,11 +96,12 @@ class UpdateFamilyIntegration extends TestCase
     private function assertAttributeMissingFromFamilyVariants(string $attributeCode, string $familyCode): void
     {
         $this->get('doctrine.orm.default_entity_manager')->clear();
-        $family = $this->testKernel->getContainer()->get('pim_catalog.repository.family')
-            ->findOneByIdentifier($familyCode);
+        $family = $this->testKernel->getContainer()->get('pim_catalog.repository.family')->findOneByIdentifier(
+            $familyCode
+        );
         foreach ($family->getFamilyVariants() as $familyVariant) {
             $familyVariantAttributeCodes = $this->getVariantFamilyAttributeCodes($familyVariant);
-            $isAttributeFound = array_search($attributeCode, $familyVariantAttributeCodes);
+            $isAttributeFound = in_array($attributeCode, $familyVariantAttributeCodes);
             $this->assertFalse(
                 $isAttributeFound,
                 sprintf(
