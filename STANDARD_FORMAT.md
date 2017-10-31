@@ -838,7 +838,6 @@ Its standard format would be the following:
         
         array:10 [
           "code" => "bar"
-          "family" => "familyA"
           "family_variant" => "familyVariantA1"
           "parent" => "fooProductModel"
           "groups" => array:2 [
@@ -880,7 +879,6 @@ Its standard format would be the following:
 
         array:10 [
           "code" => "foo"
-          "family" => "familyA"
           "family_variant" => "familyVariantA1"
           "parent" => null
           "groups" => array:2 [
