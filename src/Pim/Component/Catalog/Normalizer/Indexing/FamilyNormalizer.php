@@ -24,6 +24,9 @@ class FamilyNormalizer implements NormalizerInterface
     /** @var LocaleRepositoryInterface */
     protected $localeRepository;
 
+    /** @var Locale[] */
+    protected $activatedLocales;
+
     /**
      * @param NormalizerInterface       $translationNormalizer
      * @param LocaleRepositoryInterface $localeRepository
@@ -41,8 +44,12 @@ class FamilyNormalizer implements NormalizerInterface
      */
     public function normalize($object, $format = null, array $context = [])
     {
+        if (null === $this->activatedLocales) {
+            $this->activatedLocales = $this->localeRepository->getActivatedLocaleCodes();
+        }
+
         $context = array_merge($context, [
-            'locales' => $this->localeRepository->getActivatedLocaleCodes(),
+            'locales' => $this->activatedLocales,
         ]);
 
         return [
