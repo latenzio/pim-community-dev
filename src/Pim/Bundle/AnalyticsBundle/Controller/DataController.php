@@ -32,6 +32,8 @@ class DataController
      */
     public function collectAction()
     {
+        return new JsonResponse([]);
+
         $data = $this->dataCollector->collect('update_checker');
 
         return new JsonResponse($data);

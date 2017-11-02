@@ -59,6 +59,9 @@ class WidgetController
      */
     public function dataAction($alias)
     {
+        if ("completeness" === $alias) {
+            return new JsonResponse([]);
+        }
         $widget = $this->widgetRegistry->get($alias);
 
         $data = null !== $widget ? $widget->getData() : null;
